@@ -98,3 +98,8 @@ def auto_edit_patch(repo, cd, msg, contains_diff, author, committer, sign_str):
                 cd.message, sign_str, git.Person.committer().name,
                 git.Person.committer().email))
     return cd, failed_diff
+
+def run_commit_msg_hook(repo, cd):
+    new_msg = utils.run_hook_on_string(cd.message,
+                                       utils.get_hook(repo, 'commit-msg'))
+    return cd.set_message(new_msg)
