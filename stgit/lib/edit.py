@@ -65,7 +65,8 @@ def interactive_edit_patch(repo, cd, edit_diff, diff_flags, replacement_diff):
     return update_patch_description(
         repo, cd, utils.edit_string(
             patch_desc(repo, cd, edit_diff, diff_flags, replacement_diff),
-            '.stgit-edit.' + ['txt', 'patch'][bool(edit_diff)]),
+            '.stgit-edit.' + ['txt', 'patch'][bool(edit_diff)],
+            utils.get_hook(repo, 'commit-msg')),
         edit_diff)
 
 def auto_edit_patch(repo, cd, msg, contains_diff, author, committer, sign_str):
