@@ -203,11 +203,15 @@ def get_hook(repository, hook_name):
     hook.__name__ = hook_name
     return hook
 
-def edit_string(s, filename):
+def edit_string(s, filename, hook=None):
     f = file(filename, 'w')
     f.write(s)
     f.close()
     call_editor(filename)
+    if hook is not None:
+        err = hook(filename)
+        if err:
+            raise EditorException, 'hook failed, exit code: %d' % err
     f = file(filename)
     s = f.read()
     f.close()
