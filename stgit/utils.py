@@ -1,7 +1,7 @@
 """Common utility functions
 """
 
-import errno, os, os.path, re, sys
+import errno, os, os.path, re, sys, tempfile
 from stgit.exception import *
 from stgit.config import config
 from stgit.out import *
@@ -202,6 +202,24 @@ def get_hook(repository, hook_name):
 
     hook.__name__ = hook_name
     return hook
+
+def run_hook_on_string(s, hook):
+    if hook is not None:
+        with tempfile.NamedTemporaryFile('w', delete=False) as f:
+            filename = f.name
+            f.write(s)
+
+        try:
+            err = hook(filename)
+            if err:
+                raise EditorException, 'hook failed, exit code: %d' % err
+
+            with file(filename, 'r') as f:
+                s = f.read()
+        finally:
+            os.remove(filename)
+
+    return s
 
 def edit_string(s, filename, hook=None):
     f = file(filename, 'w')
