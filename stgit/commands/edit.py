@@ -115,6 +115,8 @@ def func(parser, options, args):
         cd, failed_diff = edit.interactive_edit_patch(
             stack.repository, cd, options.diff, options.diff_flags, failed_diff)
 
+    cd = common.run_commit_msg_hook(stack.repository, cd)
+
     def failed():
         fn = '.stgit-failed.patch'
         f = file(fn, 'w')
