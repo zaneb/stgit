@@ -189,6 +189,20 @@ def call_editor(filename):
         raise EditorException, 'editor failed, exit code: %d' % err
     out.done()
 
+def get_hook(repository, hook_name):
+    hook_path = os.path.join(repository.directory, 'hooks', hook_name)
+    if not os.path.exists(hook_path):
+        return None
+
+    def hook(*parameters):
+        argv = [hook_path]
+        argv.extend(parameters)
+
+        return os.system(' '.join(argv))
+
+    hook.__name__ = hook_name
+    return hook
+
 def edit_string(s, filename):
     f = file(filename, 'w')
     f.write(s)
