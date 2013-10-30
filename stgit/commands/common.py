@@ -476,6 +476,17 @@ def readonly_constant_property(f):
         return getattr(self, n)
     return property(new_f)
 
+def run_commit_msg_hook(repo, cd):
+    """Run the commit-msg hook (if any) on a commit.
+
+    @param cd: The L{CommitData<stgit.lib.git.CommitData>} to run the
+               hook on.
+
+    Return the new L{CommitData<stgit.lib.git.CommitData>}."""
+    new_msg = run_hook_on_string(cd.message,
+                                 get_hook(repo, 'commit-msg'))
+    return cd.set_message(new_msg)
+
 def update_commit_data(cd, options):
     """Return a new CommitData object updated according to the command line
     options."""
