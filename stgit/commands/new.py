@@ -69,6 +69,8 @@ def func(parser, options, args):
         author = gitlib.Person.author(), committer = gitlib.Person.committer())
     cd = common.update_commit_data(cd, options)
 
+    cd = common.run_commit_msg_hook(stack.repository, cd)
+
     if options.save_template:
         options.save_template(cd.message)
         return utils.STGIT_SUCCESS
